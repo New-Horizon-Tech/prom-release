@@ -11,6 +11,7 @@ if [ -z "$COMMIT_MSG" ]; then
   COMMIT_MSG="Automated commit from prom_commit.sh"
 fi
 
+
 # Set defaults if not provided
 if [ -z "$EMAIL" ]; then
   EMAIL="prom-release@local"
@@ -19,13 +20,22 @@ if [ -z "$NAME" ]; then
   NAME="Prom Release Bot"
 fi
 
+# Check if user.name and user.email are set in repo
+CURRENT_NAME=$(git -C "$SCRIPT_DIR/.." config user.name)
+CURRENT_EMAIL=$(git -C "$SCRIPT_DIR/.." config user.email)
+
+if [ -z "$CURRENT_NAME" ]; then
+  git -C "$SCRIPT_DIR/.." config user.name "$NAME"
+fi
+if [ -z "$CURRENT_EMAIL" ]; then
+  git -C "$SCRIPT_DIR/.." config user.email "$EMAIL"
+fi
 
 # Add all changed files
 git -C "$SCRIPT_DIR/.." add -A
 
-# Commit with author info
-AUTHOR="$NAME <$EMAIL>"
-git -C "$SCRIPT_DIR/.." commit -m "$COMMIT_MSG" --author="$AUTHOR"
+# Commit
+git -C "$SCRIPT_DIR/.." commit -m "$COMMIT_MSG"
 
 # Get current branch name
 BRANCH=$(git -C "$SCRIPT_DIR/.." rev-parse --abbrev-ref HEAD)
