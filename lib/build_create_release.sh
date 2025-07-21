@@ -221,5 +221,4 @@ done
 echo "$NEW_BUILD_NUMBER" > "$BUILD_NUMBER_FILE"
 
 # Print success message
-echo "New version: $FULL_VERSION"
-echo "Release created successfully"
+echo "$FULL_VERSION"
