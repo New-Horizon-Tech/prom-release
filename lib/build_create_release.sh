@@ -156,63 +156,75 @@ fi
 
 # Ensure all .yaml files in the version directory have correct metadata.labels.version and metadata.annotations.app.kubernetes.io/version
 # Ensure labels always come before annotations under metadata
+
+# Improved awk: preserve all metadata children, only update/add version label and app.kubernetes.io/version annotation
 for yamlfile in "$VERSION_DIR"/*.yaml; do
   awk -v version="$FULL_VERSION" '
     BEGIN {inmeta=0; meta_lines=""; before_meta=1; after_meta=0}
     function flush_meta() {
       if (meta_lines != "") {
-        # Remove trailing newlines
         sub(/\n*$/, "", meta_lines)
-        # Parse meta_lines into array
         n = split(meta_lines, arr, "\n")
-        labels_found=0; annotations_found=0; version_found=0; appver_found=0; name_found=0
+        labels_start=0; labels_end=0; annotations_start=0; annotations_end=0
+        version_found=0; appver_found=0
+        # Find blocks
         for (i=1; i<=n; i++) {
-          if (arr[i] ~ /^  name:/) name_found=i
-          if (arr[i] ~ /^  labels:/) labels_found=i
-          if (arr[i] ~ /^  annotations:/) annotations_found=i
+          if (arr[i] ~ /^  labels:/) { labels_start=i; labels_end=i }
+          if (labels_start && i>labels_start && arr[i] ~ /^    /) labels_end=i
+          if (labels_start && i>labels_start && arr[i] !~ /^    / && i>labels_end) break
         }
-        # Build new meta block
-        print "metadata:";
-        if (name_found) print arr[name_found]
-        # labels
-        if (!labels_found) {
-          print "  labels:";
-          print "    version: \""version"\""
-        } else {
-          print arr[labels_found]
-          label_indent="    "
-          # Print all label children, update or add version
-          for (i=labels_found+1; i<=n && arr[i] ~ /^    /; i++) {
-            if (arr[i] ~ /^    version:/) {
-              print label_indent "version: \""version"\""
-              version_found=1
-            } else {
-              print arr[i]
-            }
-          }
-          if (!version_found) print label_indent "version: \""version"\""
+        for (i=1; i<=n; i++) {
+          if (arr[i] ~ /^  annotations:/) { annotations_start=i; annotations_end=i }
+          if (annotations_start && i>annotations_start && arr[i] ~ /^    /) annotations_end=i
+          if (annotations_start && i>annotations_start && arr[i] !~ /^    / && i>annotations_end) break
         }
-        # annotations
-        if (!annotations_found) {
-          print "  annotations:";
-          print "    app.kubernetes.io/version: \""version"\""
-        } else {
-          print arr[annotations_found]
-          anno_indent="    "
-          for (i=annotations_found+1; i<=n && arr[i] ~ /^    /; i++) {
-            if (arr[i] ~ /^    app.kubernetes.io\/version:/) {
-              print anno_indent "app.kubernetes.io/version: \""version"\""
-              appver_found=1
-            } else {
-              print arr[i]
+        # Print everything, but update/add version/app.kubernetes.io/version
+        for (i=1; i<=n; i++) {
+          # labels block
+          if (i==labels_start) {
+            print arr[i]
+            for (j=labels_start+1; j<=labels_end; j++) {
+              if (arr[j] ~ /^    version:/) {
+                print "    version: \""version"\""; version_found=1
+              } else {
+                print arr[j]
+              }
             }
+            if (!version_found) print "    version: \""version"\""
+            i=labels_end
+            continue
           }
-          if (!appver_found) print anno_indent "app.kubernetes.io/version: \""version"\""
+          # annotations block
+          if (i==annotations_start) {
+            print arr[i]
+            for (j=annotations_start+1; j<=annotations_end; j++) {
+              if (arr[j] ~ /^    app.kubernetes.io\/version:/) {
+                print "    app.kubernetes.io/version: \""version"\""; appver_found=1
+              } else {
+                print arr[j]
+              }
+            }
+            if (!appver_found) print "    app.kubernetes.io/version: \""version"\""
+            i=annotations_end
+            continue
+          }
+          # print all other lines
+          if ((i<labels_start || i>labels_end) && (i<annotations_start || i>annotations_end)) {
+            print arr[i]
+          }
+        }
+        # If no labels block, add it
+        if (!labels_start) {
+          print "  labels:"; print "    version: \""version"\""
+        }
+        # If no annotations block, add it
+        if (!annotations_start) {
+          print "  annotations:"; print "    app.kubernetes.io/version: \""version"\""
         }
       }
     }
-    /^metadata:/ {inmeta=1; before_meta=0; next}
-    inmeta && /^[^ ]/ {flush_meta(); inmeta=0; after_meta=1}
+    /^metadata:/ {inmeta=1; before_meta=0; print; next}
+    inmeta && /^[^ ]/ {flush_meta(); inmeta=0; after_meta=1; print}
     inmeta {meta_lines = meta_lines $0 "\n"; next}
     before_meta {print}
     after_meta {print}
