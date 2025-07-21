@@ -4,9 +4,24 @@
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 COMMIT_MSG="$1"
+EMAIL="$2"
+NAME="$3"
+
 if [ -z "$COMMIT_MSG" ]; then
   COMMIT_MSG="Automated commit from prom_commit.sh"
 fi
+
+# Set defaults if not provided
+if [ -z "$EMAIL" ]; then
+  EMAIL="prom-release@local"
+fi
+if [ -z "$NAME" ]; then
+  NAME="Prom Release Bot"
+fi
+
+# Set git config for this commit only
+git -C "$SCRIPT_DIR/.." config user.email "$EMAIL"
+git -C "$SCRIPT_DIR/.." config user.name "$NAME"
 
 # Add all changed files
 git -C "$SCRIPT_DIR/.." add -A
