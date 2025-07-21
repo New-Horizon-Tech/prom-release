@@ -6,7 +6,7 @@
 # <version>        - Version to promote (e.g. 1.0.3) or 'latest' to promote the most recent version
 # <environment>    - Target environment name
 # [snapshot_name]  - Optional snapshot name (default: current timestamp)
-
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 if [ "$#" -lt 3 ] || [ "$#" -gt 4 ]; then
   echo "Usage: $0 <build_name> <version|latest> <environment> [snapshot_name]"
@@ -23,13 +23,13 @@ ENV_INPUT="$3"
 SNAPSHOT_NAME="$4"
 
 # Use environment_explode_environment.sh to extract PREFIX, ENV_NAME, ENV_DIR
-eval $(sh "$(dirname "$0")/environment_explode_environment.sh" "$ENV_INPUT")
+eval $(sh "$SCRIPT_DIR/environment_explode_environment.sh" "$ENV_INPUT")
 
 SNAPSHOT_DIR="$ENV_DIR/snapshots"
 
 # If version is 'latest', find the latest version directory
 if [ "$VERSION" = "latest" ]; then
-  BUILD_PATH="builds/$BUILD_NAME"
+  BUILD_PATH="$SCRIPT_DIR/../builds/$BUILD_NAME"
   if [ ! -d "$BUILD_PATH" ]; then
     echo "Build directory $BUILD_PATH does not exist. Aborting"
     exit 1

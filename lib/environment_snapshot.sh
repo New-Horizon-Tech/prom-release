@@ -9,10 +9,11 @@ if [ "$#" -ne 1 ]; then
 fi
 
 # Support prefix@envname, folder always matches full name
-ENV_INPUT="$1"
 
+ENV_INPUT="$1"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # Use environment_explode_environment.sh to extract PREFIX, ENV_NAME, ENV_DIR
-eval $(sh "$(dirname "$0")/environment_explode_environment.sh" "$ENV_INPUT")
+eval $(sh "$SCRIPT_DIR/environment_explode_environment.sh" "$ENV_INPUT")
 
 # Only output one row per build (first file found for each build)
 seen=""

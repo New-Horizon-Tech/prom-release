@@ -6,12 +6,13 @@ if [ "$#" -ne 1 ]; then
 fi
 
 # Support prefix@envname, folder always matches full name
+
 ENV_INPUT="$1"
-
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # Use environment_explode_environment.sh to extract PREFIX, ENV_NAME, ENV_DIR
-eval $(sh "$(dirname "$0")/environment_explode_environment.sh" "$ENV_INPUT")
+eval $(sh "$SCRIPT_DIR/environment_explode_environment.sh" "$ENV_INPUT")
 
-BUILDS_DIR="builds"
+BUILDS_DIR="$SCRIPT_DIR/../builds"
 
 # Create the environment directory if it doesn't exist
 NEW_ENV_CREATED=0

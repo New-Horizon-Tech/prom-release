@@ -9,8 +9,10 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
+
 ENV_NAME="$1"
-ENV_DIR="environments/$ENV_NAME"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ENV_DIR="$SCRIPT_DIR/../environments/$ENV_NAME"
 
 if [ ! -d "$ENV_DIR" ]; then
   echo "Environment directory $ENV_NAME does not exist." >&2

@@ -37,6 +37,7 @@ fi
 
 # For target environment
 # Extract prefix and environment name for target
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TGT_INPUT="$1"
 eval $(sh "$(dirname "$0")/environment_explode_environment.sh" "$TGT_INPUT")
 TGT_ENV_NAME="$ENV_NAME"

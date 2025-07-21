@@ -15,22 +15,26 @@
 #   provision <environment_name>
 #   align <target_environment> <source_environment>
 
+
 set -e
+
+# Determine the directory of this script
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 
 if [ $# -eq 0 ]; then
   echo "Usage: $0 <build|env> <subcommand> ..."
   echo
   echo "Current environments:"
-  if ls -1 environments 1>/dev/null 2>&1; then
-    ls -1 environments | sed 's/^/  /'
+  if ls -1 "$SCRIPT_DIR/environments" 1>/dev/null 2>&1; then
+    ls -1 "$SCRIPT_DIR/environments" | sed 's/^/  /'
   else
     echo "  (none)"
   fi
   echo
   echo "Current builds:"
-  if ls -1 builds 1>/dev/null 2>&1; then
-    ls -1 builds | sed 's/^/  /'
+  if ls -1 "$SCRIPT_DIR/builds" 1>/dev/null 2>&1; then
+    ls -1 "$SCRIPT_DIR/builds" | sed 's/^/  /'
   else
     echo "  (none)"
   fi
@@ -42,14 +46,14 @@ case "$1" in
     case "$2" in 
       create)
         shift 2
-        exec ./lib/build_create_release.sh "$@"
+        exec "$SCRIPT_DIR/lib/build_create_release.sh" "$@"
         ;; 
       list)
         shift 2
         if [ -n "$1" ]; then
-          ls -1 "builds/$1" 2>/dev/null || echo "No such build: $1"
+          ls -1 "$SCRIPT_DIR/builds/$1" 2>/dev/null || echo "No such build: $1"
         else
-          ls -1 builds 2>/dev/null || echo "No builds found"
+          ls -1 "$SCRIPT_DIR/builds" 2>/dev/null || echo "No builds found"
         fi
         ;;
       list-releases)
@@ -58,11 +62,11 @@ case "$1" in
           echo "Usage: $0 build list-releases <build_name>"
           exit 1
         fi
-        exec ./lib/build_list_releases.sh "$1"
+        exec "$SCRIPT_DIR/lib/build_list_releases.sh" "$1"
         ;;
       promote)
         shift 2
-        exec ./lib/build_promote_release.sh "$@"
+        exec "$SCRIPT_DIR/lib/build_promote_release.sh" "$@"
         ;;
       *)
         echo "Usage: $0 build <create|list|list-releases|promote> ..."
@@ -74,11 +78,11 @@ case "$1" in
     case "$2" in
       list)
         shift 2
-        find environments -maxdepth 1 -type d ! -name environments | sed 's|^environments/||' | grep -v '^$' || echo "No environments found"
+        find "$SCRIPT_DIR/environments" -maxdepth 1 -type d ! -name environments | sed "s|^$SCRIPT_DIR/environments/||" | grep -v '^$' || echo "No environments found"
         ;;
       list-logical)
         shift 2
-        exec ./lib/environment_list_logical.sh "$@"
+        exec "$SCRIPT_DIR/lib/environment_list_logical.sh" "$@"
         ;;
       list-releases)
         shift 2
@@ -86,7 +90,7 @@ case "$1" in
           echo "Usage: $0 env list-builds <environment_name>"
           exit 1
         fi
-        exec ./lib/environment_list_builds.sh "$1"
+        exec "$SCRIPT_DIR/lib/environment_list_builds.sh" "$1"
         ;;
       list-snapshots)
         shift 2
@@ -94,7 +98,7 @@ case "$1" in
           echo "Usage: $0 env list-snapshots <environment_input>"
           exit 1
         fi
-        exec ./lib/environment_snapshot_list.sh "$1"
+        exec "$SCRIPT_DIR/lib/environment_snapshot_list.sh" "$1"
         ;;
       cat-snapshot)
         shift 2
@@ -102,7 +106,7 @@ case "$1" in
           echo "Usage: $0 env cat-snapshot <environment_input> <snapshot_filename_without_prefix>"
           exit 1
         fi
-        exec ./lib/environment_snapshot_cat.sh "$1" "$2"
+        exec "$SCRIPT_DIR/lib/environment_snapshot_cat.sh" "$1" "$2"
         ;;
       restore-snapshot)
         shift 2
@@ -110,27 +114,27 @@ case "$1" in
           echo "Usage: $0 env restore-snapshot <environment_input> <snapshot_filename_without_prefix>"
           exit 1
         fi
-        exec ./lib/environment_snapshot_restore.sh "$1" "$2"
+        exec "$SCRIPT_DIR/lib/environment_snapshot_restore.sh" "$1" "$2"
         ;;
       provision)
         shift 2
-        exec ./lib/environment_provision.sh "$@"
+        exec "$SCRIPT_DIR/lib/environment_provision.sh" "$@"
         ;;
       align)
         shift 2
-        exec ./lib/environment_align.sh "$@"
+        exec "$SCRIPT_DIR/lib/environment_align.sh" "$@"
         ;;
       ignore)
         shift 2
-        exec ./lib/environment_ignore_add.sh "$@"
+        exec "$SCRIPT_DIR/lib/environment_ignore_add.sh" "$@"
         ;;
       delete-build)
         shift 2
-        exec ./lib/environment_delete_build.sh "$@"
+        exec "$SCRIPT_DIR/lib/environment_delete_build.sh" "$@"
         ;;
       rm)
         shift 2
-        exec ./lib/environment_delete.sh "$@"
+        exec "$SCRIPT_DIR/lib/environment_delete.sh" "$@"
         ;;
       *)
         echo "Usage: $0 env <list|list-logical|provision|list-releases|list-snapshots|cat-snapshot|restore-snapshot|align|ignore|delete-build|rm> ..."
@@ -140,7 +144,7 @@ case "$1" in
     ;;
   commit)
     shift 1
-    exec ./lib/prom_commit.sh "$@"
+    exec "$SCRIPT_DIR/lib/prom_commit.sh" "$@"
     ;;
   *)
     echo "Usage: $0 <build|env|commit> <subcommand> ..."

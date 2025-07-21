@@ -12,6 +12,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 ENV_INPUT="$1"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 case "$ENV_INPUT" in
   *@*)
@@ -24,7 +25,7 @@ case "$ENV_INPUT" in
     ;;
 esac
 
-ENV_DIR="environments/$ENV_NAME"
+ENV_DIR="$SCRIPT_DIR/../environments/$ENV_NAME"
 
 # Output as shell variable assignments
 cat <<EOF

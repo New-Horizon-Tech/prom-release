@@ -11,8 +11,10 @@ if [ "$#" -ne 2 ]; then
   exit 1
 fi
 
+
 YAML_FILE="$1"
 ENV_PREFIX="$2"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 TMP_FILE=$(mktemp)
 

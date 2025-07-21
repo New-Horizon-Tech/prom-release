@@ -1,5 +1,8 @@
 
 # Usage: build_create_release.sh <build_name> <version_yaml_file> <yaml_directory>
+
+# Determine the directory of this script
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 #
 # Creates a new build version directory, copies YAMLs, updates versioning, and ensures Kubernetes metadata is correct.
 #

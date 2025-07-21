@@ -34,9 +34,11 @@ EOF
   exit 1
 fi
 
+
 ENV_INPUT="$1"
 COMMAND="$2"
 BUILD_NAME="$3"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Use environment_explode_environment.sh to extract ENV_PREFIX and ENV_NAME
 SCRIPT_DIR="$(dirname "$0")"

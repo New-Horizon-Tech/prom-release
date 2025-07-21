@@ -8,8 +8,10 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
+
 BUILD_NAME="$1"
-BUILD_DIR="builds/$BUILD_NAME"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+BUILD_DIR="$SCRIPT_DIR/../builds/$BUILD_NAME"
 
 if [ ! -d "$BUILD_DIR" ]; then
   echo "Build directory $BUILD_DIR does not exist." >&2

@@ -14,7 +14,7 @@ BUILD_NAME="$2"
 SNAPSHOT_NAME="$3"
 
 # Use environment_explode_environment.sh to extract ENV_PREFIX and ENV_NAME
-SCRIPT_DIR="$(dirname "$0")"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 eval $(sh "$SCRIPT_DIR/environment_explode_environment.sh" "$ENV_INPUT")
 
 ENV_DIR="$SCRIPT_DIR/../environments/$ENV_NAME"
