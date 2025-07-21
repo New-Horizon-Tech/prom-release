@@ -52,7 +52,7 @@ SRC_ENV_NAME="$ENV_NAME"
 SRC_ENV_PREFIX="$ENV_PREFIX"
 SRC_DIR="$ENV_DIR"
 
-BUILDS_DIR="builds"
+BUILDS_DIR="$SCRIPT_DIR/../builds"
 
 # Check if source environment exists
 if [ ! -d "$SRC_DIR" ]; then

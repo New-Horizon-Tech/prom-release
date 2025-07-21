@@ -13,7 +13,6 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 eval $(sh "$SCRIPT_DIR/environment_explode_environment.sh" "$ENV_INPUT")
 
 ENVIRONMENTS_DIR="$SCRIPT_DIR/../environments"
-ENV_DIR="$ENVIRONMENTS_DIR/$ENV_NAME"
 SNAPSHOTS_DIR="$ENVIRONMENTS_DIR/$ENV_NAME/snapshots"
 IGNORE_FILE="$ENVIRONMENTS_DIR/${ENV_PREFIX}#$ENV_NAME.ignore"
 

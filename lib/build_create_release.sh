@@ -87,7 +87,7 @@ fi
 NAME="$1"
 VERSION_YAML_FILE="$2"
 YAML_DIRECTORY="$3"
-BUILDS_DIR="builds"
+BUILDS_DIR="$SCRIPT_DIR/../builds"
 BUILD_DIR="$BUILDS_DIR/$NAME"
 
 # Parse major and minor version from version YAML file

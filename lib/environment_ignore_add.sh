@@ -40,8 +40,6 @@ COMMAND="$2"
 BUILD_NAME="$3"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Use environment_explode_environment.sh to extract ENV_PREFIX and ENV_NAME
-SCRIPT_DIR="$(dirname "$0")"
 eval $(sh "$SCRIPT_DIR/environment_explode_environment.sh" "$ENV_INPUT")
 
 IGNORE_FILE="$SCRIPT_DIR/../environments/${ENV_PREFIX}#${ENV_NAME}.ignore"

@@ -17,7 +17,6 @@ SNAPSHOT_NAME="$3"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 eval $(sh "$SCRIPT_DIR/environment_explode_environment.sh" "$ENV_INPUT")
 
-ENV_DIR="$SCRIPT_DIR/../environments/$ENV_NAME"
 SNAPSHOT_DIR="$ENV_DIR/snapshots"
 
 

@@ -50,7 +50,7 @@ fi
 # Collect snapshot data (pre-promotion state), but do not write yet
 SNAPSHOT_DATA=$(sh "$(dirname "$0")/environment_snapshot.sh" "$ENV_INPUT")
 
-VERSION_DIR="builds/$BUILD_NAME/$VERSION"
+VERSION_DIR="$SCRIPT_DIR/../builds/$BUILD_NAME/$VERSION"
 
 # Check if environment directory exists
 if [ ! -d "$ENV_DIR" ]; then
