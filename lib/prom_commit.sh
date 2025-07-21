@@ -19,15 +19,13 @@ if [ -z "$NAME" ]; then
   NAME="Prom Release Bot"
 fi
 
-# Set git config for this commit only
-git -C "$SCRIPT_DIR/.." config user.email "$EMAIL"
-git -C "$SCRIPT_DIR/.." config user.name "$NAME"
 
 # Add all changed files
 git -C "$SCRIPT_DIR/.." add -A
 
-# Commit
-git -C "$SCRIPT_DIR/.." commit -m "$COMMIT_MSG"
+# Commit with author info
+AUTHOR="$NAME <$EMAIL>"
+git -C "$SCRIPT_DIR/.." commit -m "$COMMIT_MSG" --author="$AUTHOR"
 
 # Get current branch name
 BRANCH=$(git -C "$SCRIPT_DIR/.." rev-parse --abbrev-ref HEAD)
