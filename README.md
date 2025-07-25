@@ -36,6 +36,18 @@ All releases and environment states managed by **prom-release** are stored in a 
 
 ---
 
+### Get Started
+
+Getting started with prom-release is simple:
+
+1. **Create a Git repository** for your releases and environments.
+2. **Copy the contents of this repository** into your new repo.
+3. **Start running prom-release commands** to create builds, manage environments, and track releases.
+
+No complex setup or dependencies—just Git and shell scripts. All release history, environment state, and changes are tracked automatically in your repository, making it easy to collaborate and audit.
+
+---
+
 ### Example Workflow
 
 Here's a simple example of how you might use prom-release to manage releases and environments:
@@ -45,7 +57,7 @@ Here's a simple example of how you might use prom-release to manage releases and
 # major: 1
 # minor: 0
 
-# Create releases for frontend and package
+# Create releases for a frontend
 ./prom.sh build create MyFrontend frontend-version.yaml ./yamls/frontend
 # Create releases for a backend service
 ./prom.sh build create MyBackend backend-version.yaml ./yamls/backend
