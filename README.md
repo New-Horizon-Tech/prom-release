@@ -62,13 +62,9 @@ minor: 0
 Here's a simple example of how you might use prom-release to manage releases and environments:
 
 ```sh
-#FYI the version.yaml file is just a yaml file with your builds major and minor version eg:
-# major: 1
-# minor: 0
-
-# Create releases for a frontend
+# Creates a new releases for a frontend
 ./prom.sh build create MyFrontend frontend-version.yaml ./yamls/frontend
-# Create releases for a backend service
+# Creates a new releases for a backend service
 ./prom.sh build create MyBackend backend-version.yaml ./yamls/backend
 
 # Provision a new environment (e.g., dev)
