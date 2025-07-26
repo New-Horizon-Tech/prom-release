@@ -135,7 +135,7 @@ jobs:
             exit 1
           fi
 
-          # Commit and push the the release information
+          # Commit and push the prom-release changes
           releases/prom.sh commit "Created release and promoted OurFrontend $VERSION"
           if [ $? -ne 0 ]; then
             exit 1
