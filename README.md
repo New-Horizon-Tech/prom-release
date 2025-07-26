@@ -11,6 +11,7 @@
   - Instantly see which versions are deployed to each environment at any point in time.
 
 - **Decouple release and source code:**
+  - Let your source code govern how to build and package.
   - Decouple release and deployment management from your source code and running clusters.
   - Automate build pipelines to publish YAML files and artifacts into a centralized repository of releases.
 
@@ -44,11 +45,19 @@ Getting started with prom-release is simple:
 2. **Copy the contents of this repository** into your new repo.
 3. **Start running prom-release commands** to create builds, manage environments, and track releases.
 
-No complex setup or dependencies—just Git and shell scripts. All release history, environment state, and changes are tracked automatically in your repository, making it easy to collaborate and audit.
+No complex setup or dependencies, just Git and shell scripts. All release history, environment state, and changes are tracked automatically in your repository, making it easy to collaborate and audit.
 
+> PS! Just leave your images with the :latest tag in your yaml files and prom-release will replace them with the right version
+
+#### Version Yaml Sample
+When you want to create releases from your builds you just supply a version.yaml file and the directory containing your deployment.yaml, ingress.yaml ...
+```yaml
+major: 1
+minor: 0
+```
 ---
 
-### Example Workflow
+### Example
 
 Here's a simple example of how you might use prom-release to manage releases and environments:
 
@@ -118,7 +127,7 @@ jobs:
             exit 1
           fi
 
-          # Build and upload the docker image for the new release
+          # Build and upload the docker image for the version of the new release
           az acr login --name my_acr 
           docker build -t my_acr.azurecr.io/$APPLICATION_ID:$VERSION .
           docker push my_acr.azurecr.io/$APPLICATION_ID:$VERSION
@@ -139,7 +148,7 @@ jobs:
 
 ---
 
-### Use in combination with ArgoCD
+### Use in combination with ArgoCD 
 ArgoCD is a great tool for handling deployments to a Kubernetes cluster. Because of the simple git repository and environment folder structure it is trivial to set up a configuration to have ArgoCD auto deploy your full environment when you commit changes with prom-release.
 
 ```yaml
