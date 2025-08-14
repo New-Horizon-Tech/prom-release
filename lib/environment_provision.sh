@@ -19,6 +19,9 @@ NEW_ENV_CREATED=0
 if [ ! -d "$ENV_DIR" ]; then
   mkdir -p "$ENV_DIR"
   echo "Created environment directory: $ENV_PREFIX@$ENV_DIR"
+  # Place a readme.txt in the new environment directory
+  # Create an empty readme.txt in the new environment directory
+  : > "$ENV_DIR/readme.txt"
   # If provisioning a logical environment, provision default@$ENVIRONMENT first
   if [ -n "$ENV_PREFIX" ] && [ "$ENV_PREFIX" != "default" ]; then
     DEFAULT_ENV_INPUT="default@$ENV_NAME"
