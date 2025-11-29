@@ -23,7 +23,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 
 if [ $# -eq 0 ]; then
-  echo "Usage: $0 <build|env> <subcommand> ..."
+  echo "Usage: $0 <build|env|commit> <subcommand> ..."
   echo
   echo "Current environments:"
   if ls -1 "$SCRIPT_DIR/environments" 1>/dev/null 2>&1; then
