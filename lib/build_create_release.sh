@@ -140,6 +140,7 @@ fi
 mkdir -p "$VERSION_DIR"
 
 # Copy all files from the specified yaml_directory to the new version directory
+# recusively to capture subdirectories as well that are environment overrides
 if [ -d "$YAML_DIRECTORY" ]; then
   cp -a "$YAML_DIRECTORY"/. "$VERSION_DIR"/
 else
@@ -154,11 +155,12 @@ if [ -f "$DEPLOYMENT_YAML" ]; then
 fi
 
 
-# Ensure all .yaml files in the version directory have correct metadata.labels.version and metadata.annotations.app.kubernetes.io/version
+# Ensure all .yaml files in the version directory and subdirectories have correct metadata.labels.version 
+# and metadata.annotations.app.kubernetes.io/version
 # Ensure labels always come before annotations under metadata
 
 # Improved awk: preserve all metadata children, only update/add version label and app.kubernetes.io/version annotation
-for yamlfile in "$VERSION_DIR"/*.yaml; do
+find "$VERSION_DIR" -type f -name "*.yaml" | while read -r yamlfile; do
   awk -v version="$FULL_VERSION" '
     BEGIN {inmeta=0; meta_lines=""; before_meta=1; after_meta=0}
     function flush_meta() {

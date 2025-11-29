@@ -86,6 +86,19 @@ for f in "$VERSION_DIR"/*.yaml; do
   sh "$(dirname "$0")/build_post_process_yaml.sh" "$target_file" "$ENV_PREFIX"
 done
 
+# Copy environment specific override files if they exist in a
+# subdirectory named after the environment inside the version directory
+ENV_OVERRIDE_DIR="$VERSION_DIR/$ENV_PREFIX@$ENV_NAME"
+if [ -d "$ENV_OVERRIDE_DIR" ]; then
+  for f in "$ENV_OVERRIDE_DIR"/*.yaml; do
+    base=$(basename "$f")
+    target_file="$ENV_DIR/$ENV_PREFIX#${BUILD_NAME}-release-$base"
+    cp "$f" "$target_file"
+    # Run post-processing on the copied file
+    sh "$(dirname "$0")/build_post_process_yaml.sh" "$target_file" "$ENV_PREFIX"
+  done
+fi
+
 if [ $? -eq 0 ]; then
   if [ -z "$4" ]; then
     mkdir -p "$SNAPSHOT_DIR"
