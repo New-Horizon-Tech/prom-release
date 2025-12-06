@@ -148,11 +148,10 @@ else
   exit 1
 fi
 
-# Update deployment.yaml image tags to use the new version
-DEPLOYMENT_YAML="$VERSION_DIR/deployment.yaml"
-if [ -f "$DEPLOYMENT_YAML" ]; then
-  sed -i "s/:latest/:$FULL_VERSION/g" "$DEPLOYMENT_YAML"
-fi
+# Update all deployment.yaml image tags to use the new version (recursively)
+find "$VERSION_DIR" -type f -name "deployment.yaml" | while read -r depfile; do
+  sed -i "s/:latest/:$FULL_VERSION/g" "$depfile"
+done
 
 
 # Ensure all .yaml files in the version directory and subdirectories have correct metadata.labels.version 
