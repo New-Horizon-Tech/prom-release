@@ -148,8 +148,8 @@ else
   exit 1
 fi
 
-# Update all deployment.yaml image tags to use the new version (recursively)
-find "$VERSION_DIR" -type f -name "deployment.yaml" | while read -r depfile; do
+# Update all deployment.yaml and *-deployment.yaml image tags to use the new version (recursively)
+find "$VERSION_DIR" -type f \( -name "deployment.yaml" -o -name "*-deployment.yaml" \) | while read -r depfile; do
   sed -i "s/:latest/:$FULL_VERSION/g" "$depfile"
 done
 

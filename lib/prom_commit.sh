@@ -47,5 +47,7 @@ if [ -z "$REMOTE_EXISTS" ]; then
   # Set up remote tracking branch
   git -C "$SCRIPT_DIR/.." push --set-upstream origin "$BRANCH"
 else
+  # Rebase on top of remote to avoid push races with parallel deployments
+  git -C "$SCRIPT_DIR/.." pull --rebase origin "$BRANCH"
   git -C "$SCRIPT_DIR/.." push
 fi
